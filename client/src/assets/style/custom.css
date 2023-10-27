@@ -1,0 +1,13 @@
+.title_h1 {
+  font-size: 0.4rem;
+  font-weight: 600;
+  color: #ff3d3dd3;
+  color: #5e5b5b;
+  line-height: 1.3rem;
+}
+.title_h1 .right {
+  font-size: 0.32rem;
+  font-weight: 500;
+  color: #8d9f5e;
+  float: right;
+}

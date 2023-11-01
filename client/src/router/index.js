@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 const routes = [
-//   {
-//     path: "/",
-//     redirect: "/home",
-//   },
+  {
+    path: "/",
+    redirect: "/home",
+  },
   {
     path: "/login",
     name: "login",
@@ -12,6 +12,15 @@ const routes = [
       type: "page",
       keepAlive: false,
     },
+  },
+  {
+    path: '/home',
+    name: 'home',
+    component: () => import('@/views/Home/index.vue'),
+    meta: {
+      type: 'view',
+      keepAlive: true
+    }
   },
 ];
 const router=createRouter({

@@ -22,7 +22,7 @@ onMounted(()=>{
 })
 //绘制验证码并向父组件传递验证码的值
 const handleDraw=()=>{
-  imgCode=draw()
+  imgCode.value=draw()
   sendImgCode(imgCode.value)
 }
 //绘制的方法
@@ -77,6 +77,9 @@ const randomColor=(min,max)=>{
   const b=randomNum(min,max)
   return `rgb(${r},${g},${b})`
 }
+defineExpose({
+  handleDraw
+})
 </script>
 
 <style lang="less" scoped>

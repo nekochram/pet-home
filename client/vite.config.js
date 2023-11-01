@@ -29,12 +29,12 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://192.168.4.33:3030",
+        target: "http://192.168.4.33:4000",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
       "/socket.io": {
-        target: "ws://192.168.4.33:4000",
+        target: "ws://192.168.4.33:3030",
         ws: true,
       },
     },

@@ -91,8 +91,13 @@
 </template>
 
 <script setup>
+import { register } from "@/api";
 import VueImageVerifyVue from "./components/VueImageVerifyVue.vue";
 import { reactive, ref } from "vue";
+import { userStore } from "@/store/user";
+import { showFailToast, showSuccessToast } from "vant";
+import router from "@/router";
+const uStore=userStore()
 const verifyRef = ref(null);
 //登录和注册的表单
 const state = reactive({
@@ -105,8 +110,34 @@ const state = reactive({
 const onSubmit = () => {
   if (state.type == "login") {
     //登录
+    uStore.loginByUserNameSync(state.username,state.password).then(res=>{
+      showSuccessToast(res.mess)
+      router.replace("/home")
+    }).catch(error=>{
+      showFailToast(error.message||'登陆失败')
+    })
   } else {
     //注册
+    if(state.imgCode.toLowerCase()!=state.verify.toLowerCase()){
+      showFailToast("验证码错误")
+      verifyRef.value?.handleDraw()
+      return
+    }
+    register({
+      username: state.username,
+      password: state.password,
+      userimg: 'user_001',
+      usersign: '今日份营业汪 ! ! !'
+    }).then(res=>{
+      if(res.code==200){
+        showSuccessToast(res.mess)
+        state.type="login"
+      }else{
+        return Promise.reject(res.mess)
+      }
+    }).catch(error=>{
+      showFailToast(error.message||'注册失败')
+    })
   }
 };
 // 切换登录注册

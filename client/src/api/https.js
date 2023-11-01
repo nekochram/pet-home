@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {Toast} from 'vant'
+import {showToast} from 'vant'
 import config from './config'
 import router from '@/router'
 
@@ -30,7 +30,7 @@ req.interceptors.response.use(response=>{
   if(error?.response?.status){
     switch (error.response.status) {
       case 401:
-        Toast({
+        showToast({
           type:'fail',
           message:'登陆过期',
           forbidClick:true
@@ -43,13 +43,13 @@ req.interceptors.response.use(response=>{
         },1000)
         break;
       case 404:
-        Toast({
+        showToast({
           type:'fail',
           message:'网络请求不存在',
           forbidClick:true
         })
       default:
-        Toast({
+        showToast({
           type:'fail',
           message:error.response.data.message||'出错啦',
           forbidClick:true

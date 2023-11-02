@@ -96,7 +96,8 @@ import VueImageVerifyVue from "./components/VueImageVerifyVue.vue";
 import { reactive, ref } from "vue";
 import { userStore } from "@/store/user";
 import { showFailToast, showSuccessToast } from "vant";
-import router from "@/router";
+import { useRouter } from "vue-router";
+const router=useRouter()
 const uStore=userStore()
 const verifyRef = ref(null);
 //登录和注册的表单

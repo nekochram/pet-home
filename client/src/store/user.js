@@ -49,6 +49,7 @@ export const userStore = defineStore("user", {
         });
       })
     },
+    getUnreadSum() { return this.unreadObj}
   },
   persist: {
     // 开启数据缓存

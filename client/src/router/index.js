@@ -22,6 +22,33 @@ const routes = [
       keepAlive: true
     }
   },
+  {
+    path: '/fond',
+    name: 'fond',
+    component: () => import('@/views/Fond/index.vue'),
+    meta: {
+      type: 'view',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/comment',
+    name: 'comment',
+    component: () => import('@/views/Comment/index.vue'),
+    meta: {
+      type: 'view',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/user',
+    name: 'user',
+    component: () => import('@/views/User/index.vue'),
+    meta: {
+      type: 'view',
+      keepAlive: false
+    }
+  },
 ];
 const router=createRouter({
     history:createWebHistory(),

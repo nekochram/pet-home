@@ -24,11 +24,11 @@
             <span class="left">宠物类别</span>
             <span class="right">左滑更多类别</span>
           </p>
-          <van-tabs :active="active" background="#fdfdfd" line-width="0px" ref="scroll">
+          <van-tabs v-model:active="active" background="#fdfdfd" line-width="0px" ref="scroll">
             <van-tab v-for="item in typeMap" :key="item.icon">
               <!-- 宠物种类 -->
               <template #title>
-                <div class="icon_wrap" :class="{ iconActive: active == item.type }" @click="cutPetData(item.type)">
+                <div class="icon_wrap" :class="{ 'iconActive': active == item.type }" @click="cutPetData(item.type)">
                   <i class="iconfont" :class="item.icon"></i>
                   <p>{{ item.name }}</p>
                 </div>
@@ -48,7 +48,7 @@
                 <SkeletonVue />
               </div>
               <!-- 结束 -->
-              <van-divider contentPosition="center" v-if="petInfoList[active].End">已经没有更多了</van-divider>
+              <van-divider contentPosition="center" v-if="petInfoList[active].end">已经没有更多了</van-divider>
             </van-tab>
           </van-tabs>
         </div>
@@ -66,58 +66,124 @@
 import PetCardVue from "@/components/PetCard/index.vue"
 import SkeletonVue from "./components/Skeleton.vue"
 import { typeMap } from '@/assets/icons/icon.js';
-import { ref } from 'vue';
+import { onMounted, onActivated, onDeactivated, ref } from 'vue';
+import { showToast,showFailToast } from "vant";
+import { throttle } from "@/utils/tool"
+import { toLoadPetInfo } from "@/api";
+let rememberScroll = 0 // 当前页面滚动高度
+const pageBox = ref(null)
 const loading = ref(false);
-const onRefresh = () => {
-  setTimeout(() => {
-    showToast('刷新成功');
-    loading.value = false;
-  }, 1000);
-};
 const active = ref(0)
-const cutPetData = (type) => {
-
-}
 const refreshPage = ref(true)
 const petInfoList = [
   {
     type: '犬',
     petList: [],
     current: 1,
-    End: false,
+    end: false,
   },
   {
     type: '猫',
     petList: [],
     current: 1,
-    End: false,
+    end: false,
   },
   {
     type: '鸟',
     petList: [],
     current: 1,
-    End: false,
+    end: false,
   },
   {
     type: '兔',
     petList: [],
     current: 1,
-    End: false,
+    end: false,
   },
   {
     type: '鼠',
     petList: [],
     current: 1,
-    End: false,
+    end: false,
   },
   {
     type: '鱼',
     petList: [],
     current: 1,
-    End: false,
+    end: false,
   }
 ]
+const limits = 4//每次请求获取的宠物数量
 const petLoad = ref(false)
+//滚动监听方法
+const scrollFn = () => {
+  let { scrollTop, clientHeight, scrollHeight } = pageBox.value
+  if (scrollTop + clientHeight >= scrollHeight - 50) {
+    //触底
+    reqPetData(active.value)
+  }
+}
+// 请求宠物数据
+const reqPetData = (index) => {
+  let { type, current, end } = petInfoList[index]
+  if (!end) {
+    petLoad.value = true
+    toLoadPetInfo({
+      current,
+      limits,
+      type,
+    }).then(res => {
+      if (res.data.length > 0) {
+        petInfoList[index].current = current + 1
+        petInfoList[index].petList.push(...res.data)
+      }
+      if (res.data.length < limits) {
+        petInfoList[index].end = true
+      }
+    }).finally(() => {
+      petLoad.value = false
+    }).catch(error => {
+      showFailToast(error.message || '出错啦')
+    })
+  }
+}
+//宠物分类tab点击后
+const cutPetData = (index) => {
+  if (petInfoList[index].petList.length == 0) {
+    reqPetData(index)
+  }
+}
+//下拉刷新
+const onRefresh = () => {
+  toLoadPetInfo({
+    current: 1,
+    limits,
+    type: petInfoList[active.value].type,
+  }).then(res => {
+    petInfoList[active.value].current = 2
+    petInfoList[active.value].petList = res.data
+    if (res.data.length < limits) {
+      petInfoList[active.value].end = true
+    }
+    showToast('刷新成功');
+  }).finally(() => {
+    loading.value = false;
+  }).catch(error => {
+    showFailToast(error.message || '出错啦')
+  })
+};
+//挂载后
+onMounted(() => {
+  pageBox.value.onscroll = throttle(scrollFn, 500)
+  reqPetData(active.value)
+})
+onActivated(() => {
+  pageBox.value.scrollTop = rememberScroll;
+});
+
+onDeactivated(() => {
+  rememberScroll = pageBox.value.scrollTop;
+});
 </script>
 
 <style lang="less" scoped>

@@ -49,7 +49,10 @@ export const userStore = defineStore("user", {
         });
       })
     },
-    getUnreadSum() { return this.unreadObj}
+    getUnreadSum() { return this.unreadObj},
+    getUserName(){ return this.userInfo.name; },
+    getUserImg(){ return this.userInfo.userImg; },
+    getUserSign(){ return this.userInfo.sign; },
   },
   persist: {
     // 开启数据缓存

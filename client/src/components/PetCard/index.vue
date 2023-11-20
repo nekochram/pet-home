@@ -13,8 +13,8 @@
                 <i class="iconfont icon-sex" :class="petItem.petsex == '1' ? 'icon-nan' : 'icon-nv'"></i>
             </div>
             <div v-if="petCollect" @click.stop="cardColl(petItem.petid)" class="floatBox" :class="collect ? 'fill' : ''">
-                <i class="iconfont icon-xin2 iconColl2" v-if="collect" ></i>
-                <i class="iconfont icon-xin2 iconColl1" v-else></i>
+                <i class="iconfont icon-aixin_shixin iconColl2" v-if="collect" ></i>
+                <i class="iconfont icon-aixin_shixin iconColl1" v-else></i>
             </div>
             <div class="exitCollect" v-else @click.stop="isSheet(petItem.petid)">
                 <i class="iconfont icon-diandian" color="#95909c"></i>

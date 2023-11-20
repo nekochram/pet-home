@@ -53,7 +53,6 @@
           </van-tabs>
         </div>
       </div>
-      <!-- </div> -->
 
       <div class="load" v-show="petLoad">
         <van-loading size="24px" vertical color="#f8b158">加载中...</van-loading>
@@ -129,12 +128,12 @@ const reqPetData = (index) => {
   if (!end) {
     petLoad.value = true
     toLoadPetInfo({
-      current,
+      current:current++,
       limits,
       type,
     }).then(res => {
       if (res.data.length > 0) {
-        petInfoList[index].current = current + 1
+        petInfoList[index].current = current
         petInfoList[index].petList.push(...res.data)
       }
       if (res.data.length < limits) {
@@ -160,11 +159,9 @@ const onRefresh = () => {
     limits,
     type: petInfoList[active.value].type,
   }).then(res => {
-    petInfoList[active.value].current = 2
+    petInfoList[active.value].current = 1
     petInfoList[active.value].petList = res.data
-    if (res.data.length < limits) {
-      petInfoList[active.value].end = true
-    }
+    petInfoList[active.value].end = res.data.length < limits
     showToast('刷新成功');
   }).finally(() => {
     loading.value = false;

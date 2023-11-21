@@ -49,6 +49,15 @@ const routes = [
       keepAlive: false
     }
   },
+  {
+    path: '/petSpace',
+    name: 'petSpace',
+    component: () => import('@/views/PetSpace/index.vue'),
+    meta: {
+      type: 'petSpace',
+      keepAlive: false
+    }
+  },
 ];
 const router=createRouter({
     history:createWebHistory(),

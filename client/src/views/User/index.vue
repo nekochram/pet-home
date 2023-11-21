@@ -4,7 +4,7 @@
       <div class="info_img">
         <div class="img_wrap">
           <van-image width="2rem" height="2rem" fit="cover"
-            :src="getImageUrl('../../assets/imgs/user_photo/' + userInfo.img + '.png')" />
+            :src="getImageUrl('assets/imgs/user_photo/' + userInfo.img + '.png')" />
         </div>
       </div>
       <div class="info_content">
@@ -38,8 +38,31 @@
 </template>
 
 <script setup>
+import {getImageUrl} from "@/utils/tool"
 import { userStore } from "@/store/user"
 import { computed } from "vue"
+const pageInfo = [
+  {
+    name: "records-o",
+    content: "编辑信息",
+    url: "/updatauser",
+  },
+  {
+    name: "like-o",
+    content: "我的宠物",
+    url: "/mypet",
+  },
+  {
+    name: "add-o",
+    content: "添加宠物",
+    url: "/add",
+  },
+  {
+    name: "question-o",
+    content: "帮助",
+    url: "/",
+  },
+]
 const uStore = userStore()
 const userInfo = computed(() => {
   const name = uStore.getUserName()
@@ -47,9 +70,6 @@ const userInfo = computed(() => {
   const sign = uStore.getUserSign() || "今日份营业汪 ! ! !"
   return { name, img, sign }
 })
-const getImageUrl = (url) => {
-  return new URL(url, import.meta.url).href
-}
 </script>
 
 <style lang="less" scoped>

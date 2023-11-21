@@ -69,3 +69,7 @@ export const timeInterval = (dateTime, type) => {
     return tips; 
 
 }
+// 获取本地图片
+export const getImageUrl = (url) => {
+  return new URL('../' + url, import.meta.url).href
+}

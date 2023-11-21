@@ -108,12 +108,17 @@ const state = reactive({
   imgCode: "", //正确的验证码
   type: "login",
 });
+console.log(router)
 const onSubmit = () => {
   if (state.type == "login") {
     //登录
     uStore.loginByUserNameSync(state.username,state.password).then(res=>{
       showSuccessToast(res.mess)
-      router.replace("/home")
+      if(router.currentRoute.value.query?.redirect){
+        router.replace(router.currentRoute.value.query.redirect)
+      }else{
+        router.replace("/home")
+      }
     }).catch(error=>{
       showFailToast(error.message||'登陆失败')
     })

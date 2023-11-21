@@ -30,6 +30,7 @@ req.interceptors.response.use(response=>{
   if(error?.response?.status){
     switch (error.response.status) {
       case 401:
+        let redirect=router.currentRoute.value.fullPath
         showToast({
           type:'fail',
           message:'登陆过期',
@@ -38,7 +39,7 @@ req.interceptors.response.use(response=>{
         setTimeout(()=>{
           router.replace({
             path:'/login',
-            redirect:router.currentRoute.fullPath
+            query:{redirect}
           })
         },1000)
         break;

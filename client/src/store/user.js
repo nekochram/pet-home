@@ -49,6 +49,11 @@ export const userStore = defineStore("user", {
         });
       })
     },
+    // 全局页面栈操作
+    pageStackPush(item) { this.pageStack.push(item) },
+    pageStackShift() { this.pageStack.shift() },
+    getPageStack() { return this.pageStack },
+    //用户信息操作
     getUnreadSum() { return this.unreadObj},
     getUserName(){ return this.userInfo.name; },
     getUserImg(){ return this.userInfo.userImg; },

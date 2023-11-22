@@ -27,8 +27,9 @@
 <script setup>
 import { onMounted, ref } from "vue"
 import { toRelatedPage } from "@/router/tools";
-import { setFondCollect,getFondCollect } from "@/api";
 import { useRouter } from "vue-router";
+import { userStore } from "@/store/user";
+const uStore=userStore()
 const router=useRouter()
 const props = defineProps({
   petItem: {
@@ -46,17 +47,15 @@ const toDetails = () => {
   toRelatedPage('petSpace', router, 500, { petid, hostid });
 }
 const cardColl = (id) => {
-  setFondCollect({ id }).then(res => {
+  uStore.setFondCollectStatus(id).then(res => {
     collect.value = res.data
-  }).catch(error => {
-    console.log(error)
-  });
+  })
 }
 const isSheet = () => {
 
 }
 const queryCollectStatus=(id)=>{
-  getFondCollect({id}).then(res => {
+  uStore.queryCollectStatus(id).then(res => {
     collect.value=res.data;
   })
 }

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { login } from "@/api";
+import { login,setFondCollect,getFondCollect } from "@/api";
 
 const defaultState = {
   userInfo: {
@@ -58,6 +58,29 @@ export const userStore = defineStore("user", {
     getUserName(){ return this.userInfo.name; },
     getUserImg(){ return this.userInfo.userImg; },
     getUserSign(){ return this.userInfo.sign; },
+    getChatList() { return this.chatList; },
+    //关注/取关宠物
+    setFondCollectStatus(id){
+      return new Promise((resolve, reject) => {
+        setFondCollect({ id }).then((res) => {
+          resolve(res);
+        }).catch(error=>{
+          console.log(error)
+          reject(error)
+        });
+      })
+    },
+    //查询宠物关注状态
+    queryCollectStatus(id){
+      return new Promise((resolve, reject) => {
+        getFondCollect({ id }).then((res) => {
+          resolve(res);
+        }).catch(error=>{
+          console.log(error)
+          reject(error)
+        });
+      })
+    }
   },
   persist: {
     // 开启数据缓存

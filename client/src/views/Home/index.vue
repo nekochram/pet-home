@@ -40,7 +40,7 @@
               </p>
               <div class="content_wrap" v-if="refreshPage">
                 <div class="item" v-for="item in petInfoList[active].petList" :key="item.petid">
-                  <PetCardVue :petItem="item" />
+                  <PetCardVue :petItem="item"/>
                 </div>
               </div>
 

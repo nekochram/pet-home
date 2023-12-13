@@ -58,6 +58,42 @@ const routes = [
       keepAlive: false
     }
   },
+  {
+    path: '/addPet',
+    name: 'addPet',
+    component: () => import('@/views/addPet/index.vue'),
+    meta: {
+      type: 'page',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/myPet',
+    name: 'myPet',
+    component: () => import('@/views/myPet/index.vue'),
+    meta: {
+      type: 'page',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/editUserInfo',
+    name: 'editUserInfo',
+    component: () => import('@/views/editUserInfo/index.vue'),
+    meta: {
+      type: 'page',
+      keepAlive: false
+    }
+  },
+  {
+    path: '/userSpace',
+    name: 'userSpace',
+    component: () => import('@/views/userSpace/index.vue'),
+    meta: {
+      type: 'userSpace',
+      keepAlive: false
+    }
+  },
 ];
 const router=createRouter({
     history:createWebHistory(),

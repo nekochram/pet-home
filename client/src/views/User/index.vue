@@ -38,9 +38,12 @@
 </template>
 
 <script setup>
-import {getImageUrl} from "@/utils/tool"
+import { toRelatedPage } from "@/router/tools";
+import { getImageUrl } from "@/utils/tool"
 import { userStore } from "@/store/user"
 import { computed } from "vue"
+import { useRouter } from "vue-router";
+import { showConfirmDialog } from "vant";
 const pageInfo = [
   {
     name: "records-o",
@@ -56,13 +59,9 @@ const pageInfo = [
     name: "add-o",
     content: "添加宠物",
     url: "/add",
-  },
-  {
-    name: "question-o",
-    content: "帮助",
-    url: "/",
-  },
+  }
 ]
+const router = useRouter()
 const uStore = userStore()
 const userInfo = computed(() => {
   const name = uStore.getUserName()
@@ -70,6 +69,18 @@ const userInfo = computed(() => {
   const sign = uStore.getUserSign() || "今日份营业汪 ! ! !"
   return { name, img, sign }
 })
+const queryInfo = {
+  userId: uStore.getUserId(),
+}
+const toExit = () => {
+  showConfirmDialog({
+    message: "确定要退出登录吗？",
+  }).then(() => {
+    uStore.emptyState();
+    uStore.socketDisconnect();
+    router.push("/login");
+  });
+};
 </script>
 
 <style lang="less" scoped>

@@ -17,7 +17,7 @@
           <i class="iconfont icon-aixin_shixin iconColl1" v-else></i>
         </div>
         <div class="exitCollect" v-else @click.stop="isSheet(petItem.petid)">
-          <i class="iconfont icon-diandian" color="#95909c"></i>
+          <i class="iconfont icon-gengduo" color="#95909c"></i>
         </div>
       </div>
     </div>
@@ -31,6 +31,7 @@ import { useRouter } from "vue-router";
 import { userStore } from "@/store/user";
 const uStore=userStore()
 const router=useRouter()
+const $emit=defineEmits(["open"])
 const props = defineProps({
   petItem: {
     type: Object,
@@ -51,8 +52,8 @@ const cardColl = (id) => {
     collect.value = res.data
   })
 }
-const isSheet = () => {
-
+const isSheet = (petid) => {
+  $emit("open", { type: true, petid })
 }
 const queryCollectStatus=(id)=>{
   uStore.queryCollectStatus(id).then(res => {
@@ -121,8 +122,6 @@ onMounted(()=>{
       text-align: center;
 
       .exitCollect {
-        transform: rotate(90deg);
-
         &>i {
           font-size: .45rem;
           color: #86909c;

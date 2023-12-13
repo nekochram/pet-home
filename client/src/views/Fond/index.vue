@@ -10,19 +10,19 @@
         <van-sticky>
           <div class="tool_wrap">
             <van-dropdown-menu active-color="#f8b158">
-              <van-dropdown-item v-model="type" :options="optionType" />
-              <van-dropdown-item v-model="sort" :options="optionSort" />
+              <van-dropdown-item v-model="type" :options="optionType" @change="changeType" />
+              <van-dropdown-item v-model="sort" :options="optionSort" @change="changeSort" />
             </van-dropdown-menu>
           </div>
         </van-sticky>
 
-        <div class="content" v-if="petFondList.length !== 0 && refreshPage">
+        <div class="content" v-if="petFondList.length !== 0 && !refreshPage">
           <div class="item" v-for="item in petFondList" :key="item.petid">
             <PetCardVue :petItem="item" :petCollect="false" @open="sheetOpen" />
           </div>
         </div>
 
-        <div class="content_sheleton" v-else-if="!refreshPage">
+        <div class="content_sheleton" v-else-if="refreshPage">
           <SkeletonVue />
         </div>
 
@@ -37,18 +37,21 @@
 </template>
 
 <script setup>
+import PetCardVue from "@/components/PetCard/index.vue"
 import SkeletonVue from "@/views/Home/components/Skeleton.vue"
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { getImageUrl } from "@/utils/tool";
+import { userStore } from "@/store/user"
+import { showConfirmDialog } from "vant";
+const uStore = userStore()
 const loading = ref(false)
 const refreshPage = ref(false)
-const petFondList = ref([])
+let petFondList = ref([])//筛选后进行展示的宠物
+let allFondPet = []//全部关注的宠物
 const show = ref(false)
-const onRefresh = () => {
-
-}
+let actionPetId = ''
 const type = ref('all')
-const sort = ref('time')
+const sort = ref('fond')
 const optionType = [
   { text: '全部', value: 'all' },
   { text: '类别：犬', value: '犬' },
@@ -59,20 +62,72 @@ const optionType = [
   { text: '类别：鱼', value: '鱼' },
 ]
 const optionSort = [
-  { text: '时间排序', value: 'time' },
   { text: '喜爱排序', value: 'fond' },
+  { text: '时间排序', value: 'time' },
 ]
 const actions = [
   {
+    action: "uncheck",
     name: '取消喜爱',
   },
 ]
+const onRefresh = () => {
+  refreshPage.value = true
+  getPetList()
+}
 const onClose = () => {
-
+  show.value = false;
 }
-const onSelect = () => {
-
+const onSelect = (value) => {
+  if (value.action === 'uncheck') {
+    showConfirmDialog({
+      message: "确定取消关注该宠物吗？",
+    }).then(() => {
+      uStore.setUserCollect(actionPetId);
+      state.show = false;
+      getPetList()
+    }).catch(() => {
+      state.show = false;
+    });
+  }
 }
+const sheetOpen = (params) => {
+  show.value = params.type
+  actionPetId = params.petid
+}
+
+//切换显示类型
+const changeType = value => {
+  setPetFondList()
+}
+
+//切换排序方式
+const changeSort = value => {
+  if (value == "time") {
+    petFondList.value.sort((a, b) => b.ctime - a.ctime);
+  } else {
+    setPetFondList()
+  }
+}
+
+const getPetList = () => {
+  uStore.getFondInfoSync().then(res => {
+    allFondPet = res.data
+    setPetFondList();
+    refreshPage.value = false
+  });
+}
+
+//根据类型切换显示的宠物
+const setPetFondList = () => {
+  const unSortList = type.value === 'all' ? [].concat(allFondPet) : allFondPet.filter(value => value.petcategory === type.value);
+  petFondList.value = sort.value == "time" ? unSortList.sort((a, b) => b.ctime - a.ctime) : unSortList
+}
+
+onMounted(() => {
+  getPetList()
+})
+
 </script>
 
 <style lang="less" scoped>
